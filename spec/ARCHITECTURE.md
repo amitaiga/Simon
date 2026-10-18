@@ -283,3 +283,28 @@ flowchart LR
 - מגבלת 7 הימים של Safari על אחסון מקומי והפטור לאפליקציות במסך הבית: https://ionic.io/blog/is-apple-trying-to-kill-pwas ו-https://www.theregister.com/2020/03/26/apple_relax_were_not_totally/
 - לוח הזמנים של Node.js: https://dev.to/mr_manushukla/one-nodejs-release-a-year-from-2027-what-the-node-27-lts-change-means-for-your-upgrade-cadence-2fo3
 - נתוני אימוץ Frameworks (State of JS 2025): https://blog.codercops.com/blog/state-of-javascript-2025-survey-2026
+
+---
+
+## החלטות מרכזיות (ADRs)
+
+### ADR-1: הזרקת נתיב הבסיס דרך משתנה הסביבה `BASE_PATH`
+**הקשר:** האתר ב-GitHub Pages רץ בתת-נתיב (`/<שם-repo>/`), ומקומית הוא רץ ב-`/`.
+**החלטה:** `vite.config.ts` קורא את `base` מ-`BASE_PATH`, וברירת המחדל היא `/`. ה-Workflow מגדיר `BASE_PATH: /${{ github.event.repository.name }}/` בשלב ה-Build.
+**השלכות:** אין צורך בקובץ `.env` או בהגדרה ידנית. שינוי שם ה-Repository מתעדכן אוטומטית. ב-M4 אותו ערך ישמש ל-`start_url` ול-`scope` של ה-Manifest. בבדיקה מקומית ב-Git Bash צריך `MSYS_NO_PATHCONV=1` כדי שהנתיב לא יומר לנתיב Windows.
+
+### ADR-2: יחידת קנה מידה `--u` למידות ה-Mockup
+**הקשר:** המידות ב-DESIGN נתונות ביחידות עיצוב על מסך ברוחב 404, וצריך להתאים אותן לרוחב המכשיר.
+**החלטה:** משתנה CSS בשם `--u: calc(min(100vw, 480px) / 404)`. כל מידה נכתבת כ-`calc(<ערך> * var(--u))`, ועמודת התוכן מוגבלת לרוחב 480px.
+**השלכות:** הפריסה מתכווננת באופן יחסי בכל טלפון ונשארת נאמנה ל-Mockup. במחשב היא לא נמתחת. אין צורך ב-Media Queries.
+
+### ADR-3: Node.js 25 מקומית ו-Node.js 24 ב-CI
+**הקשר:** במחשב הפיתוח מותקן Node.js 25.1, וה-ARCHITECTURE מגדיר Node.js 24 LTS.
+**החלטה:** ה-CI רץ על Node.js 24. ב-`package.json` מוגדר `engines.node: >=22.12`, כך ששתי הגרסאות נתמכות (דרישת Vite 8).
+**השלכות:** אין צורך להחליף את הגרסה המקומית. ה-Build הרשמי (והפריסה) רצים על גרסת ה-LTS.
+
+### ADR-4: גרסאות החבילות
+**הקשר:** בזמן הבנייה הגרסה העדכנית של Vitest היא 5.x, וה-ARCHITECTURE מגדיר "4.1 ומעלה".
+**החלטה:** Vite 8.3, TypeScript 6.0, Vitest 4.1 (הענף הבשל שתומך רשמית ב-Vite 8), ו-`@types/node` 24 (נדרש כדי ש-`vite.config.ts` יעבור בדיקת טיפוסים). כל הגרסאות נעולות ב-`package-lock.json`.
+**השלכות:** אפשר לעבור ל-Vitest 5 בהמשך כשיהיה צורך.
+

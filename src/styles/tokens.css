@@ -1,0 +1,44 @@
+/* Design tokens from spec/DESIGN.md section 2 */
+:root {
+  /* Game colors: Lit / Idle / Edge */
+  --green-lit: #18d770;
+  --green-idle: #136037;
+  --green-edge: #0c9a4f;
+  --red-lit: #fa4a32;
+  --red-idle: #6d281e;
+  --red-edge: #c92a18;
+  --yellow-lit: #eed729;
+  --yellow-idle: #68601a;
+  --yellow-edge: #e09400;
+  --blue-lit: #219cdf;
+  --blue-idle: #164963;
+  --blue-edge: #1779b8;
+
+  /* Neutrals */
+  --ink: #0f1110;
+  --bezel: #191b1a;
+  --surface: #242827;
+  --line: #3a3f3d;
+  --muted: #bcbcbc;
+  --cloud: #e6e6e6;
+  --white: #ffffff;
+  --board-housing: #0a0b0b;
+
+  --font-family: Arial, Helvetica, sans-serif;
+
+  /* Design unit: mockups are drawn on a 404-wide screen; capped at 480px on wide screens */
+  --u: calc(min(100vw, 480px) / 404);
+
+  /* Radius and spacing scales, in design units (multiply by --u when used) */
+  --radius-pill: 9999px;
+  --radius-card: 24;
+  --radius-row: 14;
+  --radius-chip: 8;
+  --space-1: 4;
+  --space-2: 8;
+  --space-3: 12;
+  --space-4: 16;
+  --space-5: 24;
+  --space-6: 32;
+  --space-7: 48;
+}

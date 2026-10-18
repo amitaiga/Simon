@@ -1,0 +1,53 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+html,
+body {
+  min-height: 100dvh;
+  background: var(--ink);
+  color: var(--cloud);
+  font-family: var(--font-family);
+}
+
+#app {
+  max-width: 480px;
+  margin-inline: auto;
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-inline: calc(26 * var(--u) + env(safe-area-inset-right))
+    calc(26 * var(--u) + env(safe-area-inset-left));
+}
+
+/* Header: title on the right, level pill on the left (RTL flow), divider at y≈130 */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: calc(130 * var(--u));
+  padding-top: calc(54 * var(--u));
+  border-bottom: calc(2 * var(--u)) solid var(--line);
+}
+
+.header__title {
+  font-size: calc(34 * var(--u));
+  font-weight: 700;
+  color: var(--white);
+}
+
+.level-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(134 * var(--u));
+  height: calc(48 * var(--u));
+  border: calc(3 * var(--u)) solid var(--white);
+  border-radius: var(--radius-pill);
+  background: var(--ink);
+  color: var(--white);
+  font-size: calc(26 * var(--u));
+  font-weight: 700;
+}
