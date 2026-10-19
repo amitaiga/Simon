@@ -1,13 +1,22 @@
-import { GAP_MS, LEVEL_PAUSE_MS, LIT_MS, PRESS_MS, type ColorId } from '../game/config';
+import {
+  GAME_OVER_DELAY_MS,
+  GAP_MS,
+  LEVEL_PAUSE_MS,
+  LIT_MS,
+  PRESS_MS,
+  type ColorId,
+} from '../game/config';
 import { GameEngine } from '../game/engine';
 import type { AudioService } from '../services/audio';
 import type { HomeScreen } from '../ui/homeScreen';
+import type { SummaryOverlay } from '../ui/summaryOverlay';
 
 const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
 
-// Connects the pure game engine to the board, the level pill, audio and timing.
+// Connects the pure game engine to the board, the level pill, the summary overlay, audio and timing.
 export function createGameController(
   screen: HomeScreen,
+  overlay: SummaryOverlay,
   audio: AudioService,
   engine = new GameEngine(),
 ): void {
@@ -36,23 +45,29 @@ export function createGameController(
     board.setCenter('yourTurn');
   }
 
-  // Temporary end of game for M1: back to the initial state (the summary overlay comes in M2)
-  function endGame(levelReached: number): void {
-    if (levelReached > best) {
-      best = levelReached;
-      screen.setBest(best);
-    }
-    engine.reset();
-    screen.setLevel(1);
-    board.setCenter('ready');
-  }
-
-  board.onStart(() => {
+  function startGame(): void {
     if (engine.state !== 'Idle' && engine.state !== 'GameOver') return;
     audio.unlock();
     engine.start();
     screen.setLevel(engine.level);
     void showSequence();
+  }
+
+  // The engine stays in GameOver while the overlay is open; "play again" starts a new game from it
+  function endGame(levelReached: number): void {
+    if (levelReached > best) {
+      best = levelReached;
+      screen.setBest(best);
+    }
+    screen.setLevel(1);
+    void wait(GAME_OVER_DELAY_MS).then(() => overlay.show(levelReached));
+  }
+
+  board.onStart(startGame);
+
+  overlay.onPlayAgain(() => {
+    overlay.hide();
+    startGame();
   });
 
   board.onColorPress((color) => {

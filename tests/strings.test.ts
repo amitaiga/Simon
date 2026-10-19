@@ -6,4 +6,9 @@ describe('strings', () => {
     expect(strings.appTitle).toBe('סיימון');
     expect(strings.level(1)).toBe('שלב 1');
   });
+
+  it('provides the summary overlay texts', () => {
+    expect(strings.lostAt(4)).toBe('הפסדת בשלב 4');
+    expect(strings.playAgain).toBe('שחק שוב');
+  });
 });

@@ -11,6 +11,8 @@ export const GAP_MS = 200;
 export const PRESS_MS = 250;
 // Pause after a completed level, before the next sequence starts
 export const LEVEL_PAUSE_MS = 700;
+// Pause after a wrong press, before the summary overlay opens
+export const GAME_OVER_DELAY_MS = 600;
 
 // Tone per color (C major chord)
 export const FREQUENCIES: Record<ColorId, number> = {
