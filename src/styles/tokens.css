@@ -26,8 +26,16 @@
 
   --font-family: Arial, Helvetica, sans-serif;
 
-  /* Design unit: mockups are drawn on a 404-wide screen; capped at 480px on wide screens */
-  --u: calc(min(100vw, 480px) / 404);
+  /* Design unit: mockups are drawn on a 404x894 screen. Phones scale by width;
+     wide screens (desktop) scale up to fit the screen height. */
+  --u: max(calc(min(100vw, 480px) / 404), min(100vw / 404, 100dvh / 894));
+
+  /* Board diameter: at least the mockup size (304), grown to fill the screen width
+     (minus side margins) or the height left under the header and the best card, whichever is smaller */
+  --board-size: max(
+    calc(304 * var(--u)),
+    min(100vw - 52 * var(--u), 100dvh - 246 * var(--u))
+  );
 
   /* Radius and spacing scales, in design units (multiply by --u when used) */
   --radius-pill: 9999px;

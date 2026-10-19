@@ -1,7 +1,16 @@
 import { strings } from '../i18n/strings';
+import { createBoard, type Board } from './board';
 
-// Builds the home screen. In M0 it contains only the header; the board and scoreboard come later.
-export function createHomeScreen(): HTMLElement {
+export interface HomeScreen {
+  element: HTMLElement;
+  board: Board;
+  setLevel(level: number): void;
+  setBest(level: number): void;
+}
+
+// Builds the home screen: header, game board and the personal-best card
+// (the recent-games list comes in M3).
+export function createHomeScreen(): HomeScreen {
   const screen = document.createElement('div');
   screen.className = 'home';
 
@@ -18,6 +27,31 @@ export function createHomeScreen(): HTMLElement {
   levelPill.textContent = strings.level(1);
 
   header.append(title, levelPill);
-  screen.append(header, document.createElement('main'));
-  return screen;
+
+  const board = createBoard();
+
+  // Personal best card: hidden until the first game ends
+  const bestCard = document.createElement('div');
+  bestCard.className = 'best-card';
+  bestCard.hidden = true;
+  const bestLabel = document.createElement('span');
+  bestLabel.className = 'best-card__label';
+  bestLabel.textContent = strings.bestLabel;
+  const bestValue = document.createElement('span');
+  bestValue.className = 'best-card__value';
+  bestCard.append(bestLabel, bestValue);
+
+  const main = document.createElement('main');
+  main.append(board.element, bestCard);
+
+  screen.append(header, main);
+  return {
+    element: screen,
+    board,
+    setLevel: (level) => (levelPill.textContent = strings.level(level)),
+    setBest: (level) => {
+      bestValue.textContent = strings.bestValue(level);
+      bestCard.hidden = false;
+    },
+  };
 }

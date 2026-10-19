@@ -14,7 +14,7 @@ body {
 }
 
 #app {
-  max-width: 480px;
+  max-width: calc(var(--board-size) + 52 * var(--u));
   margin-inline: auto;
   padding-top: env(safe-area-inset-top);
   padding-bottom: env(safe-area-inset-bottom);
@@ -50,4 +50,32 @@ body {
   color: var(--white);
   font-size: calc(26 * var(--u));
   font-weight: 700;
+}
+
+/* Personal best card (DESIGN 1.1 / 2.3): 16 below the board, height 60 */
+.best-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: calc(60 * var(--u));
+  margin-top: calc(16 * var(--u));
+  padding-inline: calc(24 * var(--u));
+  border: calc(3 * var(--u)) solid var(--line);
+  border-radius: calc(16 * var(--u));
+  background: var(--surface);
+}
+
+.best-card[hidden] {
+  display: none;
+}
+
+.best-card__label {
+  font-size: calc(23 * var(--u));
+  color: var(--muted);
+}
+
+.best-card__value {
+  font-size: calc(30 * var(--u));
+  font-weight: 700;
+  color: var(--yellow-lit);
 }

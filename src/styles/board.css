@@ -1,0 +1,137 @@
+/* Game board (DESIGN 1.1, "מצבי הרבעים"). Mockup: housing r=152, quadrants r=138.
+   The board fills the available width or height (whichever is smaller); all inner sizes use
+   --b, a board unit equal to 1/304 of its diameter. */
+.board {
+  --b: calc(var(--board-size) / 304);
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: calc(11 * var(--b));
+  width: var(--board-size);
+  height: var(--board-size);
+  margin: calc(20 * var(--u)) auto 0;
+  padding: calc(14 * var(--b));
+  border: calc(2 * var(--b)) solid var(--line);
+  border-radius: 50%;
+  background: var(--board-housing);
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.board button {
+  font-family: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.board button:focus {
+  outline: none;
+}
+
+.board button:focus-visible {
+  outline: calc(3 * var(--b)) solid var(--blue-lit);
+  outline-offset: calc(2 * var(--b));
+}
+
+/* Quadrants: each is a quarter circle (one fully rounded outer corner) */
+.quadrant {
+  padding: 0;
+  border: calc(3 * var(--b)) solid var(--board-housing);
+  background: var(--idle);
+  transition: background-color 60ms linear;
+}
+
+.quadrant--green {
+  --idle: var(--green-idle);
+  --lit: var(--green-lit);
+  --edge: var(--green-edge);
+  --glow: #18d770ab;
+  border-top-left-radius: 100%;
+}
+
+.quadrant--red {
+  --idle: var(--red-idle);
+  --lit: var(--red-lit);
+  --edge: var(--red-edge);
+  --glow: #fa4a32ab;
+  border-top-right-radius: 100%;
+}
+
+.quadrant--yellow {
+  --idle: var(--yellow-idle);
+  --lit: var(--yellow-lit);
+  --edge: var(--yellow-edge);
+  --glow: #eed729ab;
+  border-bottom-left-radius: 100%;
+}
+
+.quadrant--blue {
+  --idle: var(--blue-idle);
+  --lit: var(--blue-lit);
+  --edge: var(--blue-edge);
+  --glow: #219cdfab;
+  border-bottom-right-radius: 100%;
+}
+
+/* Lit: Lit fill, Edge outline, ~67% glow */
+.quadrant.is-lit {
+  position: relative;
+  z-index: 1;
+  background: var(--lit);
+  border-color: var(--edge);
+  box-shadow: 0 0 calc(22 * var(--b)) var(--glow);
+}
+
+/* Dark ring (r=60) around the center button (r=52) */
+.board__ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: calc(120 * var(--b));
+  height: calc(120 * var(--b));
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: var(--board-housing);
+}
+
+.board__center {
+  width: calc(104 * var(--b));
+  height: calc(104 * var(--b));
+  padding: 0;
+  border: calc(4 * var(--b)) solid var(--green-edge);
+  border-radius: 50%;
+  background: var(--green-lit);
+  box-shadow: 0 0 calc(18 * var(--b)) #18d7706e;
+  color: var(--ink);
+  font-size: calc(28 * var(--b));
+  font-weight: 700;
+  transition: transform 80ms ease-out;
+}
+
+.board__center[data-mode='ready']:active {
+  transform: scale(0.96);
+}
+
+/* During a game: dark, no glow, not clickable (decisions 1–2) */
+.board__center:disabled {
+  border-color: var(--line);
+  background: var(--bezel);
+  box-shadow: none;
+  cursor: default;
+}
+
+.board__center[data-mode='watch'] {
+  color: var(--muted);
+}
+
+.board__center[data-mode='yourTurn'] {
+  color: var(--white);
+}
